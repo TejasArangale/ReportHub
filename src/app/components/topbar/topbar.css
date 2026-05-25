@@ -1,0 +1,29 @@
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.topbar-title { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; letter-spacing: -0.01em; }
+
+.search-box {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 10px; height: 31px; width: 210px;
+  transition: border-color 0.15s;
+}
+.search-box:focus-within { border-color: var(--red); }
+.search-box i { color: var(--text-secondary); font-size: 14px; flex-shrink: 0; }
+.search-box input {
+  background: transparent; border: none; outline: none;
+  font-size: 12px; font-family: var(--font); color: var(--text); width: 100%;
+}
+.search-box input::placeholder { color: #AAAAAA; }
+

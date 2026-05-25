@@ -1,0 +1,213 @@
+<div class="sched-hd">
+  <div class="sched-hd-sub">12 active schedules across all countries</div>
+  <button class="tb-btn tb-btn-primary" style="font-size:12px" (click)="openModal()">
+    <i class="ti ti-plus"></i> New schedule
+  </button>
+</div>
+<div class="sched-list">
+  <div class="sched-card" *ngFor="let sched of filteredSchedules">
+    <div class="sched-icon"><i class="ti" [ngClass]="sched.icon"></i></div>
+    <div class="sched-info">
+      <div class="sched-name">{{ sched.name }}</div>
+      <div class="sched-meta">{{ sched.meta }}</div>
+    </div>
+    <span class="sched-status" [ngClass]="{'ss-active': sched.active, 'ss-paused': !sched.active}">{{ sched.active ? 'Active' : 'Paused' }}</span>
+    <button class="sched-toggle" [ngClass]="{'toggle-on': sched.active, 'toggle-off': !sched.active}" (click)="toggleSchedule(sched)" aria-label="Toggle">
+      <div class="toggle-thumb"></div>
+    </button>
+  </div>
+  <div class="new-sched" (click)="openModal()">
+    <i class="ti ti-plus"></i> Add new schedule
+  </div>
+</div>
+
+<!-- ── NEW SCHEDULE MODAL ── -->
+<div class="modal-overlay" [class.open]="isModalOpen" (click)="isModalOpen && closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon"><i class="ti ti-clock-plus"></i></div>
+        <div>
+          <div class="modal-title" id="modal-title">New Schedule</div>
+          <div class="modal-subtitle">Configure when and how this report will run automatically</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="modal-steps">
+      <div class="mstep" [class.active]="currentStep === 1" [class.done]="currentStep > 1"><span class="mstep-num">1</span> Report</div>
+      <div class="mstep-line"></div>
+      <div class="mstep" [class.active]="currentStep === 2" [class.done]="currentStep > 2"><span class="mstep-num">2</span> Schedule</div>
+      <div class="mstep-line"></div>
+      <div class="mstep" [class.active]="currentStep === 3" [class.done]="currentStep > 3"><span class="mstep-num">3</span> Delivery</div>
+    </div>
+
+    <!-- STEP 1: Report selection -->
+    <div class="modal-body" *ngIf="currentStep === 1">
+      <div class="modal-section-title">Select report &amp; country</div>
+      <div class="mform-row">
+        <div class="mform-group">
+          <label for="m-country">Country</label>
+          <select id="m-country" [(ngModel)]="newSched.country" (change)="newSched.reportName = ''">
+            <option value="">— Select country —</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="NBC">NBC</option>
+          </select>
+        </div>
+        <div class="mform-group">
+          <label for="m-type">Report type</label>
+          <select id="m-type" [(ngModel)]="newSched.type" (change)="newSched.reportName = ''">
+            <option value="">All types</option>
+            <option value="FCC">FCC</option>
+            <option value="FCR">FCR</option>
+          </select>
+        </div>
+      </div>
+      <div class="mform-group" style="margin-bottom:14px">
+        <label for="m-report">Report name</label>
+        <select id="m-report" [(ngModel)]="newSched.reportName" [class.error]="!newSched.reportName && !newSched.country">
+          <option value="">— Select a report —</option>
+          <option *ngFor="let r of filteredReportsForDropdown" [value]="r.name">{{ r.name }} ({{ r.type }})</option>
+        </select>
+      </div>
+
+      <!-- Report preview chip -->
+      <div class="report-chip" *ngIf="selectedReportDetails">
+        <div class="chip-icon"><i class="ti ti-file-description"></i></div>
+        <div class="chip-info">
+          <div class="chip-name">{{ selectedReportDetails.name }}</div>
+          <div class="chip-meta">{{ selectedReportDetails.country }} · {{ selectedReportDetails.desc }}</div>
+        </div>
+        <span class="chip-badge badge" [ngClass]="'badge-' + selectedReportDetails.type.toLowerCase()">{{ selectedReportDetails.type }}</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: Schedule parameters -->
+    <div class="modal-body" *ngIf="currentStep === 2">
+      <div class="modal-section-title">Schedule parameters</div>
+      <div class="mform-row">
+        <div class="mform-group">
+          <label for="m-freq">Frequency</label>
+          <select id="m-freq" [(ngModel)]="newSched.freq">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly (1st of month)</option>
+            <option value="custom">Custom (cron)</option>
+          </select>
+        </div>
+        <div class="mform-group">
+          <label for="m-time">Run at time</label>
+          <input type="time" id="m-time" [(ngModel)]="newSched.time">
+        </div>
+      </div>
+
+      <div class="mform-group" *ngIf="newSched.freq === 'weekly'" style="margin-bottom:14px">
+        <label>Run on day</label>
+        <div class="day-pills">
+          <span class="day-pill" *ngFor="let day of daysOfWeek" 
+                [class.active]="newSched.days.includes(day)"
+                (click)="toggleDay(day)">{{ day }}</span>
+        </div>
+      </div>
+
+      <div class="mform-group" *ngIf="newSched.freq === 'custom'" style="margin-bottom:14px">
+        <label for="m-cron">Cron expression</label>
+        <input type="text" id="m-cron" [(ngModel)]="newSched.cron" placeholder="e.g. 0 6 * * 1-5" style="font-family:monospace">
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">
+          <i class="ti ti-info-circle" style="font-size:12px;vertical-align:-1px"></i>
+          Format: minute hour day month weekday
+        </div>
+      </div>
+
+      <div class="mform-row">
+        <div class="mform-group">
+          <label for="m-start">Start date</label>
+          <input type="date" id="m-start" [(ngModel)]="newSched.start">
+        </div>
+        <div class="mform-group">
+          <label for="m-end">End date <span style="font-weight:400;color:var(--text-secondary)">(optional)</span></label>
+          <input type="date" id="m-end" [(ngModel)]="newSched.end">
+        </div>
+      </div>
+
+      <!-- Schedule preview pill -->
+      <div class="schedule-preview">
+        <i class="ti ti-calendar-check" style="color:var(--red);font-size:15px"></i>
+        <span>{{ schedulePreviewText }}</span>
+      </div>
+    </div>
+
+    <!-- STEP 3: Delivery -->
+    <div class="modal-body" *ngIf="currentStep === 3">
+      <div class="modal-section-title">Delivery settings</div>
+      <div class="mform-row">
+        <div class="mform-group">
+          <label for="m-format">Output format</label>
+          <select id="m-format" [(ngModel)]="newSched.format">
+            <option>PDF</option>
+            <option>Excel (XLSX)</option>
+            <option>CSV</option>
+          </select>
+        </div>
+        <div class="mform-group">
+          <label for="m-delivery">Delivery method</label>
+          <select id="m-delivery" [(ngModel)]="newSched.delivery">
+            <option value="email">Email</option>
+            <option value="path">Network path</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mform-group" *ngIf="newSched.delivery === 'email'" style="margin-bottom:14px">
+        <label for="m-emails">Recipient email addresses</label>
+        <input type="text" id="m-emails" [(ngModel)]="newSched.emails" placeholder="user@bank.com, another@bank.com">
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Separate multiple addresses with commas</div>
+      </div>
+
+      <div class="mform-group" *ngIf="newSched.delivery === 'path'" style="margin-bottom:14px">
+        <label for="m-path">Network path</label>
+        <input type="text" id="m-path" [(ngModel)]="newSched.path" placeholder="\\server\reports\output">
+      </div>
+
+      <div class="mform-group" style="margin-bottom:14px">
+        <label for="m-subject">Email subject <span style="font-weight:400;color:var(--text-secondary)">(optional)</span></label>
+        <input type="text" id="m-subject" [(ngModel)]="newSched.subject" placeholder="Scheduled report: {report_name} — {date}">
+      </div>
+
+      <!-- Summary card -->
+      <div class="summary-card">
+        <div class="summary-title"><i class="ti ti-list-check"></i> Summary</div>
+        <div class="summary-row"><span class="summary-lbl">Report</span><span class="summary-val">{{ newSched.reportName || '—' }}</span></div>
+        <div class="summary-row"><span class="summary-lbl">Country</span><span class="summary-val">{{ newSched.country || '—' }}</span></div>
+        <div class="summary-row"><span class="summary-lbl">Schedule</span><span class="summary-val">{{ schedulePreviewText }}</span></div>
+        <div class="summary-row"><span class="summary-lbl">Format</span><span class="summary-val">{{ newSched.format || '—' }}</span></div>
+        <div class="summary-row"><span class="summary-lbl">Delivery</span><span class="summary-val">{{ getSummaryDelivery() }}</span></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="mfooter-btn mfooter-cancel" (click)="closeModal()">Cancel</button>
+      <div style="display:flex;gap:8px">
+        <button class="mfooter-btn mfooter-back" *ngIf="currentStep > 1" (click)="modalBack()">
+          <i class="ti ti-arrow-left"></i> Back
+        </button>
+        <button class="mfooter-btn mfooter-next" *ngIf="currentStep < 3" (click)="modalNext()">
+          Next <i class="ti ti-arrow-right"></i>
+        </button>
+        <button class="mfooter-btn mfooter-save" *ngIf="currentStep === 3" (click)="saveSchedule()">
+          <i class="ti ti-check"></i> Save schedule
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SUCCESS TOAST ── -->
+<div class="toast" [class.show]="showToast"><i class="ti ti-circle-check"></i> Schedule saved successfully!</div>

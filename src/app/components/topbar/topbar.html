@@ -1,0 +1,11 @@
+<div class="topbar">
+  <span class="topbar-title" id="topbar-title">{{ title }}</span>
+  <div class="search-box">
+    <i class="ti ti-search"></i>
+    <input type="text" placeholder="Search reports…" (input)="onSearchInput($event)">
+  </div>
+  <button class="tb-btn"><i class="ti ti-bell"></i></button>
+  <button class="tb-btn tb-btn-primary" (click)="setScreen('runner')">
+    <i class="ti ti-player-play"></i> Run Report
+  </button>
+</div>

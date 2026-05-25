@@ -1,0 +1,29 @@
+<div class="filter-row">
+  <span class="filter-tag" *ngFor="let filter of filters" 
+        [class.active]="activeFilter === filter"
+        (click)="setFilter(filter)">{{ filter }}</span>
+</div>
+<div class="tbl-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Report name</th>
+        <th>Type</th>
+        <th>Country</th>
+        <th>Last run</th>
+        <th>Duration</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of filteredReports">
+        <td>{{ report.name }}</td>
+        <td><span class="badge" [ngClass]="{'badge-fcc': report.type === 'FCC', 'badge-fcr': report.type === 'FCR'}">{{ report.type }}</span></td>
+        <td>{{ report.country }}</td>
+        <td>{{ report.lastRun }}</td>
+        <td>{{ report.duration }}</td>
+        <td><button class="run-btn" (click)="setScreen('runner')">Run</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

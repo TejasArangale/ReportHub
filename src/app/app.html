@@ -1,0 +1,12 @@
+<div class="app">
+  <app-sidebar [activeScreen]="activeScreen" [activeFilter]="activeFilter" (screenChange)="onScreenChange($event)" (filterChange)="onFilterChange($event)"></app-sidebar>
+  <div class="main">
+    <app-topbar (screenChange)="onScreenChange($event)" [activeScreen]="activeScreen" (searchChange)="onSearchChange($event)"></app-topbar>
+    <div class="content">
+      <app-dashboard *ngIf="activeScreen === 'dashboard'" (screenChange)="onScreenChange($event)"></app-dashboard>
+      <app-reports *ngIf="activeScreen === 'reports'" [externalFilter]="activeFilter" [searchTerm]="searchTerm" (screenChange)="onScreenChange($event)" (filterChange)="onFilterChange($event)"></app-reports>
+      <app-runner *ngIf="activeScreen === 'runner'"></app-runner>
+      <app-schedule *ngIf="activeScreen === 'schedule'" [searchTerm]="searchTerm"></app-schedule>
+    </div>
+  </div>
+</div>
