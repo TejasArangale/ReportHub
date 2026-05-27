@@ -1,5 +1,5 @@
 <div class="sched-hd">
-  <div class="sched-hd-sub">12 active schedules across all countries</div>
+  <div class="sched-hd-sub">{{ activeCount }} active schedules across all countries</div>
   <button class="tb-btn tb-btn-primary" style="font-size:12px" (click)="openModal()">
     <i class="ti ti-plus"></i> New schedule
   </button>
@@ -211,3 +211,4 @@
 
 <!-- ── SUCCESS TOAST ── -->
 <div class="toast" [class.show]="showToast"><i class="ti ti-circle-check"></i> Schedule saved successfully!</div>
+ 
