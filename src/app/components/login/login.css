@@ -4,9 +4,7 @@
   justify-content: center;
   align-items: center;
   padding: 24px;
-  background: radial-gradient(circle at top left, rgba(169, 12, 43, 0.10), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(21, 101, 192, 0.08), transparent 28%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+  
 }
 
 .login-card {
