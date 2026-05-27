@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+ 
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -10,17 +10,17 @@ import { CommonModule } from '@angular/common';
 })
 export class Reports {
   @Output() screenChange = new EventEmitter<string>();
-
+ 
   @Input() set externalFilter(val: string) {
     if (val) {
       this.activeFilter = val;
     }
   }
   @Input() searchTerm: string = '';
-
+ 
   filters = ['All', 'FCC', 'FCR', 'Kenya', 'Uganda', 'Mozambique', 'NBC'];
   activeFilter = 'All';
-
+ 
   reports = [
     { name: 'Daily Transaction Summary', type: 'FCC', country: 'Kenya', lastRun: '2 min ago', duration: '0.8s' },
     { name: 'Customer Risk Score Report', type: 'FCR', country: 'Uganda', lastRun: '15 min ago', duration: '1.4s' },
@@ -30,7 +30,7 @@ export class Reports {
     { name: 'Credit Exposure Summary', type: 'FCR', country: 'Uganda', lastRun: 'Yesterday', duration: '1.1s' },
     { name: 'Regulatory Capital Report', type: 'FCR', country: 'Kenya', lastRun: 'Yesterday', duration: '3.2s' }
   ];
-
+ 
   get filteredReports() {
     let result = this.reports;
     if (this.activeFilter !== 'All') {
@@ -38,18 +38,22 @@ export class Reports {
     }
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      result = result.filter(r => r.name.toLowerCase().includes(term));
+      result = result.filter(r =>r.name.toLowerCase().includes(term)     ||
+        r.type.toLowerCase().includes(term)     ||
+        r.country.toLowerCase().includes(term)  ||
+        r.lastRun.toLowerCase().includes(term)  ||
+        r.duration.toLowerCase().includes(term));
     }
     return result;
   }
-
+ 
   @Output() filterChange = new EventEmitter<string>();
-
+ 
   setFilter(filter: string) {
     this.activeFilter = filter;
     this.filterChange.emit(filter);
   }
-
+ 
   setScreen(screen: string) {
     this.screenChange.emit(screen);
   }
