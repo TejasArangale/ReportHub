@@ -72,13 +72,56 @@
   padding: 10px 6px;
   border-top: 1px solid rgba(255,255,255,0.13);
 }
-.sb-user { display: flex; align-items: center; gap: 9px; padding: 7px 8px; }
+.sb-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s;
+}
+.sb-user.clickable:hover {
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-1px);
+}
 .sb-avatar {
-  width: 29px; height: 29px; border-radius: 50%;
-  background: rgba(255,255,255,0.22);
-  color: #fff; font-size: 11px; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
-.sb-uname { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.92); }
-.sb-urole { font-size: 10.5px; color: rgba(255,255,255,0.48); margin-top: 1px; }
+.sb-uname { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.95); }
+.sb-urole { font-size: 10px; color: rgba(255,255,255,0.58); margin-top: 1px; }
+.sb-arrow {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 14px;
+}
+.sb-logout {
+  margin-top: 10px;
+  padding: 0 12px;
+}
+.sb-logout button {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.sb-logout button:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.26);
+}

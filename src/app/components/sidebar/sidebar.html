@@ -43,12 +43,18 @@
   </div>
 
   <div class="sb-footer">
-    <div class="sb-user">
-      <div class="sb-avatar">JM</div>
+    <div class="sb-user" (click)="toggleLogout()" [class.clickable]="currentUser.name">
+      <div class="sb-avatar">{{ userInitials }}</div>
       <div>
-        <div class="sb-uname">James Mwangi</div>
-        <div class="sb-urole">Report Admin · Kenya</div>
+        <div class="sb-uname">{{ currentUser.name || 'Guest User' }}</div>
+        <div class="sb-urole">{{ currentUser.role || 'Please login' }} · {{ currentUser.location || 'Unknown' }}</div>
       </div>
+      <div class="sb-arrow" *ngIf="currentUser.name">
+        <i class="ti ti-chevron-down"></i>
+      </div>
+    </div>
+    <div class="sb-logout" *ngIf="currentUser.name && showLogout">
+      <button type="button" (click)="onLogout()">Logout</button>
     </div>
   </div>
 </div>
