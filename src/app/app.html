@@ -3,6 +3,7 @@
     [activeScreen]="activeScreen"
     [activeFilter]="activeFilter"
     [currentUser]="currentUser"
+    [reports]="reports"
     (screenChange)="onScreenChange($event)"
     (filterChange)="onFilterChange($event)"
     (logout)="onLogout()"
@@ -18,6 +19,8 @@
       <app-reports *ngIf="activeScreen === 'reports'" [externalFilter]="activeFilter" [searchTerm]="searchTerm" (screenChange)="onScreenChange($event)" (filterChange)="onFilterChange($event)"></app-reports>
       <app-runner *ngIf="activeScreen === 'runner'"></app-runner>
       <app-schedule *ngIf="activeScreen === 'schedule'" [searchTerm]="searchTerm"></app-schedule>
+      <app-user-management *ngIf="activeScreen === 'user-management'"></app-user-management>
+      <app-settings *ngIf="activeScreen === 'settings'"></app-settings>
     </div>
   </div>
 </div>

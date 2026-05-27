@@ -14,7 +14,7 @@
     </div>
     <div class="sb-item" [class.active]="activeScreen === 'reports' && activeFilter === 'All'" (click)="setScreen('reports')">
       <i class="ti ti-file-description"></i> All Reports
-      <span class="sb-badge">303</span>
+      <span class="sb-badge">{{ totalCount }}</span>
     </div>
     <div class="sb-item" [class.active]="activeScreen === 'runner'" (click)="setScreen('runner')">
       <i class="ti ti-player-play"></i> Run Report
@@ -25,21 +25,29 @@
 
     <div class="sb-section" style="margin-top:8px">Countries</div>
     <div class="sb-item" [class.active]="activeScreen === 'reports' && activeFilter === 'Kenya'" (click)="setScreenWithFilter('reports', 'Kenya')">
-      <i class="ti ti-map-pin"></i> Kenya <span class="sb-badge">179</span>
+      <i class="ti ti-map-pin"></i> Kenya
+      <span class="sb-badge">{{ countByCountry('Kenya') }}</span>
     </div>
     <div class="sb-item" [class.active]="activeScreen === 'reports' && activeFilter === 'Uganda'" (click)="setScreenWithFilter('reports', 'Uganda')">
-      <i class="ti ti-map-pin"></i> Uganda <span class="sb-badge">95</span>
+      <i class="ti ti-map-pin"></i> Uganda
+      <span class="sb-badge">{{ countByCountry('Uganda') }}</span>
     </div>
     <div class="sb-item" [class.active]="activeScreen === 'reports' && activeFilter === 'Mozambique'" (click)="setScreenWithFilter('reports', 'Mozambique')">
-      <i class="ti ti-map-pin"></i> Mozambique <span class="sb-badge">8</span>
+      <i class="ti ti-map-pin"></i> Mozambique
+      <span class="sb-badge">{{ countByCountry('Mozambique') }}</span>
     </div>
     <div class="sb-item" [class.active]="activeScreen === 'reports' && activeFilter === 'NBC'" (click)="setScreenWithFilter('reports', 'NBC')">
-      <i class="ti ti-map-pin"></i> NBC <span class="sb-badge">21</span>
+      <i class="ti ti-map-pin"></i> NBC
+      <span class="sb-badge">{{ countByCountry('NBC') }}</span>
     </div>
 
     <div class="sb-section" style="margin-top:8px">Admin</div>
-    <div class="sb-item"><i class="ti ti-users"></i> User Management</div>
-    <div class="sb-item"><i class="ti ti-settings"></i> Settings</div>
+    <div class="sb-item" [class.active]="activeScreen === 'user-management'" (click)="setScreen('user-management')">
+      <i class="ti ti-users"></i> User Management
+    </div>
+    <div class="sb-item" [class.active]="activeScreen === 'settings'" (click)="setScreen('settings')">
+      <i class="ti ti-settings"></i> Settings
+    </div>
   </div>
 
   <div class="sb-footer">

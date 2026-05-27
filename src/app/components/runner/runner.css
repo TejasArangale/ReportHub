@@ -10,6 +10,16 @@
   padding: 16px;
   margin-bottom: 12px;
 }
+
+.exp-btn-selected,
+.exp-btn-selected:hover {
+  background: #1565C0 !important;
+  border-color: #1565C0 !important;
+  color: #fff !important;
+}
+.exp-btn-selected i {
+  color: #fff !important;
+}
 .runner-title {
   font-size: 14.5px; font-weight: 600; color: var(--text);
   margin-bottom: 3px; display: flex; align-items: center; gap: 8px;
@@ -53,6 +63,7 @@
 .exp-btn:hover { background: var(--bg-secondary); }
 .exp-btn-run { background: var(--red); color: #fff; border-color: var(--red); margin-left: auto; }
 .exp-btn-run:hover { background: var(--red-dark); }
+.exp-btn-run:disabled { opacity: 0.7; cursor: not-allowed; }
 
 .preview-box {
   background: var(--bg-secondary);
@@ -81,3 +92,14 @@
 .preview-table tr:nth-child(even) td { background: var(--white); }
 .preview-table tr:last-child td { border-bottom: none; }
 .preview-footer { font-size: 11px; color: var(--text-secondary); margin-top: 9px; }
+
+/* ── Loading state ── */
+.runner-loading {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-secondary); font-size: 13px;
+  padding: 40px 0; justify-content: center;
+}
+
+/* ── Spin animation (used on loader + run button) ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { display: inline-block; animation: spin 0.8s linear infinite; }

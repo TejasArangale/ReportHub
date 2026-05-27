@@ -1,68 +1,89 @@
-<div class="breadcrumb">
-  <span>Reports</span>
-  <i class="ti ti-chevron-right"></i>
-  <span class="cur">Daily Transaction Summary</span>
-</div>
-<div class="runner-card">
-  <div class="runner-title">
-    Daily Transaction Summary
-    <span class="badge badge-fcc">FCC</span>
+@if (report) {
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span>Reports</span>
+    <i class="ti ti-chevron-right"></i>
+    <span class="cur">{{ report.name }}</span>
   </div>
-  <div class="runner-sub">Kenya · Returns all transactions processed in the selected date range, grouped by branch and account type.</div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>Country</label>
-      <select><option>Kenya</option><option>Uganda</option><option>Mozambique</option><option>NBC</option></select>
+
+  <!-- Runner card -->
+  <div class="runner-card">
+    <div class="runner-title">
+      {{ report.name }}
+      <span class="badge badge-{{ report.badge }}">{{ report.badge.toUpperCase() }}</span>
     </div>
-    <div class="form-group">
-      <label>Branch</label>
-      <select><option>All branches</option><option>Nairobi HQ</option><option>Mombasa</option><option>Kisumu</option></select>
+    <div class="runner-sub">{{ report.description }}</div>
+
+    <!-- Dynamic form fields in pairs of 2 per row -->
+    @for (pair of fieldPairs; track $index) {
+      <div class="form-row">
+        @for (field of pair; track field.key) {
+          <div class="form-group">
+            <label>{{ field.label }}</label>
+            @if (field.type === 'select') {
+              <select [(ngModel)]="fieldValues[field.key]">
+                @for (opt of field.options; track opt) {
+                  <option [value]="opt">{{ opt }}</option>
+                }
+              </select>
+            }
+            @if (field.type === 'date') {
+              <input type="date" [(ngModel)]="fieldValues[field.key]" />
+            }
+            @if (field.type === 'text') {
+              <input type="text" [(ngModel)]="fieldValues[field.key]" />
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Export + Run buttons -->
+    <div class="export-row">
+      <button class="exp-btn" [class.exp-btn-selected]="selectedFormat === 'PDF'"   (click)="selectFormat('PDF')">
+        <i class="ti ti-file-type-pdf"></i> PDF
+      </button>
+      <button class="exp-btn" [class.exp-btn-selected]="selectedFormat === 'Excel'" (click)="selectFormat('Excel')">
+        <i class="ti ti-file-type-xls"></i> Excel
+      </button>
+      <button class="exp-btn" [class.exp-btn-selected]="selectedFormat === 'CSV'"   (click)="selectFormat('CSV')">
+        <i class="ti ti-file-type-csv"></i> CSV
+      </button>
+      <button class="exp-btn exp-btn-run" (click)="runReport()" [disabled]="isRunning">
+        @if (isRunning) {
+          <i class="ti ti-refresh spin"></i> Running…
+        } @else {
+          <i class="ti ti-player-play"></i> Run Report
+        }
+      </button>
     </div>
   </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>Date from</label>
-      <input type="date" value="2025-05-01">
+
+  <!-- Preview table -->
+  @if (showPreview) {
+    <div class="preview-box">
+      <div class="preview-hd"><i class="ti ti-table"></i> Preview — first 5 rows</div>
+      <table class="preview-table">
+        <thead>
+          <tr>
+            @for (header of previewHeaders; track header) {
+              <th>{{ header }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of previewRows; track $index) {
+            <tr>
+              @for (cell of row; track $index) {
+                <td>{{ cell }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="preview-footer">{{ previewFooter }}</div>
     </div>
-    <div class="form-group">
-      <label>Date to</label>
-      <input type="date" value="2025-05-21">
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group">
-      <label>Transaction type</label>
-      <select><option>All types</option><option>Credit</option><option>Debit</option><option>Transfer</option></select>
-    </div>
-    <div class="form-group">
-      <label>Min amount (KES)</label>
-      <input type="text" value="0">
-    </div>
-  </div>
-  <div class="export-row">
-    <button class="exp-btn"><i class="ti ti-file-type-pdf"></i> PDF</button>
-    <button class="exp-btn"><i class="ti ti-file-type-xls"></i> Excel</button>
-    <button class="exp-btn"><i class="ti ti-file-type-csv"></i> CSV</button>
-    <button class="exp-btn exp-btn-run" (click)="runReport()" [disabled]="isRunning">
-      <i class="ti ti-player-play" *ngIf="!isRunning"></i>
-      <i class="ti ti-refresh" *ngIf="isRunning" style="animation: spin 1s linear infinite;"></i>
-      {{ isRunning ? 'Running...' : 'Run Report' }}
-    </button>
-  </div>
-</div>
-<div class="preview-box" *ngIf="showPreview">
-  <div class="preview-hd"><i class="ti ti-table"></i> Preview — first 5 rows</div>
-  <table class="preview-table">
-    <thead>
-      <tr><th>Date</th><th>Branch</th><th>Account</th><th>Type</th><th>Amount (KES)</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>01 May 2025</td><td>Nairobi HQ</td><td>0012-34567</td><td>Credit</td><td>142,500</td><td>Settled</td></tr>
-      <tr><td>01 May 2025</td><td>Mombasa</td><td>0098-11234</td><td>Debit</td><td>58,200</td><td>Settled</td></tr>
-      <tr><td>02 May 2025</td><td>Kisumu</td><td>0045-78901</td><td>Transfer</td><td>320,000</td><td>Settled</td></tr>
-      <tr><td>02 May 2025</td><td>Nairobi HQ</td><td>0023-45678</td><td>Credit</td><td>89,750</td><td>Pending</td></tr>
-      <tr><td>03 May 2025</td><td>Mombasa</td><td>0067-23456</td><td>Debit</td><td>15,600</td><td>Settled</td></tr>
-    </tbody>
-  </table>
-  <div class="preview-footer">Showing 5 of 4,821 rows · Ran in 0.8s</div>
-</div>
+  }
+
+}
