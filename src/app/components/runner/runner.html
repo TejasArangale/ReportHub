@@ -58,9 +58,40 @@
         }
       </button>
     </div>
+
+    <!-- Popup: shown during generating and success states -->
+    @if (reportState !== 'idle') {
+      <div class="runner-popup">
+        <div class="runner-popup-body">
+
+          <!-- Icon: spinner while generating, checkmark on success -->
+          @if (reportState === 'generating') {
+            <div class="popup-icon">
+              <i class="ti ti-loader spin"></i>
+            </div>
+          } @else {
+            <div class="popup-icon popup-success">
+              <i class="ti ti-check"></i>
+            </div>
+          }
+
+          <div class="popup-copy">
+            <div class="popup-title">{{ reportMessage }}</div>
+
+            <!-- Download button only shown on success -->
+            @if (reportState === 'success') {
+              <button class="download-btn" (click)="downloadReport()">
+                <i class="ti ti-download"></i> Download {{ selectedFormat }}
+              </button>
+            }
+          </div>
+
+        </div>
+      </div>
+    }
   </div>
 
-  <!-- Preview table -->
+  <!-- Preview table — hidden while report is running, restored after -->
   @if (showPreview) {
     <div class="preview-box">
       <div class="preview-hd"><i class="ti ti-table"></i> Preview — first 5 rows</div>

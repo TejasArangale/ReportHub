@@ -1,0 +1,12 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="white"></rect>
+  <g stroke="#B0002A" stroke-width="18" fill="none">
+    <path d="M35 95 A125 125 0 0 1 265 95"></path>
+    <path d="M275 105 A125 125 0 0 1 275 195"></path>
+    <path d="M265 205 A125 125 0 0 1 35 205"></path>
+    <path d="M25 195 A125 125 0 0 1 25 105"></path>
+  </g>
+  <text x="150" y="175" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="700" fill="#B0002A">
+    absa
+  </text>
+</svg>
