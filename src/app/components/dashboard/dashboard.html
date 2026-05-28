@@ -1,98 +1,49 @@
+<!-- Stats row -->
 <div class="stats-row">
-  <div class="stat-card">
-    <div class="stat-num">303</div>
-    <div class="stat-lbl">Total reports</div>
-    <div class="stat-sub"><i class="ti ti-map-pin" style="font-size:11px"></i> 4 countries</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num stat-num-red">47</div>
-    <div class="stat-lbl">Ran today</div>
-    <div class="stat-sub green"><i class="ti ti-trending-up" style="font-size:11px"></i> +12 vs yesterday</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num">12</div>
-    <div class="stat-lbl">Scheduled jobs</div>
-    <div class="stat-sub"><i class="ti ti-clock" style="font-size:11px"></i> Next in 18 min</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num stat-num-green">100%</div>
-    <div class="stat-lbl">Migrated</div>
-    <div class="stat-sub green"><i class="ti ti-shield-check" style="font-size:11px"></i> All reports live</div>
-  </div>
+  @for (stat of stats; track stat.label) {
+    <div class="stat-card">
+      <div class="stat-num" [ngClass]="stat.valueClass">{{ stat.value }}</div>
+      <div class="stat-lbl">{{ stat.label }}</div>
+      <div class="stat-sub" [ngClass]="stat.subClass">
+        <i class="ti {{ stat.subIcon }}" style="font-size:11px"></i> {{ stat.subText }}
+      </div>
+    </div>
+  }
 </div>
 
+<!-- Recent reports -->
 <div class="sec-hd">
   <div class="sec-hd-title">Recent reports</div>
   <div class="view-all" (click)="setScreen('reports')">View all →</div>
 </div>
 
 <div class="report-grid">
-  <div class="report-card" (click)="setScreen('runner')">
-    <div class="rc-top">
-      <span class="rc-name">Daily Transaction Summary</span>
-      <span class="badge badge-fcc">FCC</span>
+  @for (r of recentReports; track r.name) {
+    <div class="report-card" (click)="setScreen('runner')">
+      <div class="rc-top">
+        <span class="rc-name">{{ r.name }}</span>
+        <span class="badge badge-{{ r.badge }}">{{ r.badge.toUpperCase() }}</span>
+      </div>
+      <div class="rc-meta">
+        <span><i class="ti ti-map-pin"></i>{{ r.country }}</span>
+        <span><i class="ti ti-clock"></i>{{ r.time }}</span>
+        <span><i class="ti ti-user"></i>{{ r.user }}</span>
+      </div>
     </div>
-    <div class="rc-meta">
-      <span><i class="ti ti-map-pin"></i>Kenya</span>
-      <span><i class="ti ti-clock"></i>2 min ago</span>
-      <span><i class="ti ti-user"></i>J. Mwangi</span>
-    </div>
-  </div>
-  <div class="report-card" (click)="setScreen('runner')">
-    <div class="rc-top">
-      <span class="rc-name">Customer Risk Score Report</span>
-      <span class="badge badge-fcr">FCR</span>
-    </div>
-    <div class="rc-meta">
-      <span><i class="ti ti-map-pin"></i>Uganda</span>
-      <span><i class="ti ti-clock"></i>15 min ago</span>
-      <span><i class="ti ti-user"></i>A. Nakato</span>
-    </div>
-  </div>
-  <div class="report-card" (click)="setScreen('runner')">
-    <div class="rc-top">
-      <span class="rc-name">AML Suspicious Activity</span>
-      <span class="badge badge-fcc">FCC</span>
-    </div>
-    <div class="rc-meta">
-      <span><i class="ti ti-map-pin"></i>NBC</span>
-      <span><i class="ti ti-clock"></i>1 hr ago</span>
-      <span><i class="ti ti-user"></i>T. Banda</span>
-    </div>
-  </div>
-  <div class="report-card" (click)="setScreen('runner')">
-    <div class="rc-top">
-      <span class="rc-name">Monthly Compliance Summary</span>
-      <span class="badge badge-fcr">FCR</span>
-    </div>
-    <div class="rc-meta">
-      <span><i class="ti ti-map-pin"></i>Mozambique</span>
-      <span><i class="ti ti-clock"></i>2 hrs ago</span>
-      <span><i class="ti ti-user"></i>M. Sitoe</span>
-    </div>
-  </div>
+  }
 </div>
 
-<div class="sec-hd"><div class="sec-hd-title">Activity feed</div></div>
+<!-- Activity feed -->
+<div class="sec-hd">
+  <div class="sec-hd-title">Activity feed</div>
+</div>
+
 <div class="activity-list">
-  <div class="act-item">
-    <div class="act-dot dot-green"></div>
-    <div class="act-text"><b>Daily Transaction Summary</b> exported as PDF by J. Mwangi</div>
-    <div class="act-time">2m ago</div>
-  </div>
-  <div class="act-item">
-    <div class="act-dot dot-blue"></div>
-    <div class="act-text"><b>Schedule: Weekly FCR Digest</b> ran successfully — sent to 3 recipients</div>
-    <div class="act-time">18m ago</div>
-  </div>
-  <div class="act-item">
-    <div class="act-dot dot-amber"></div>
-    <div class="act-text"><b>Customer Risk Score</b> ran — 4,821 rows returned in 1.4s</div>
-    <div class="act-time">1h ago</div>
-  </div>
-  <div class="act-item">
-    <div class="act-dot dot-green"></div>
-    <div class="act-text"><b>AML Suspicious Activity</b> exported as Excel by T. Banda</div>
-    <div class="act-time">2h ago</div>
-  </div>
+  @for (act of activities; track act.time) {
+    <div class="act-item">
+      <div class="act-dot {{ act.dotClass }}"></div>
+      <div class="act-text"><b>{{ act.boldPart }}</b> {{ act.text }}</div>
+      <div class="act-time">{{ act.time }}</div>
+    </div>
+  }
 </div>
