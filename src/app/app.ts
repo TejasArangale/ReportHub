@@ -80,5 +80,6 @@ export class App {
   { name: 'Watchlist Screening Report', type: 'FCC', country: 'Kenya',      lastRun: '3 hrs ago',  duration: '1.9s' },
   { name: 'Credit Exposure Summary',    type: 'FCR', country: 'Uganda',     lastRun: 'Yesterday',  duration: '1.1s' },
   { name: 'Regulatory Capital Report',  type: 'FCR', country: 'Kenya',      lastRun: 'Yesterday',  duration: '3.2s' },
+  
 ];
 }
