@@ -16,10 +16,14 @@ export class Reports {
       this.activeFilter = val;
     }
   }
+  @Input() currentUserLocation: string = '';
   @Input() searchTerm: string = '';
  
-  filters = ['All', 'FCC', 'FCR', 'Kenya', 'Uganda', 'Mozambique', 'NBC'];
   activeFilter = 'All';
+
+  get filters() {
+    return ['All', 'FCC', 'FCR'];
+  }
  
   reports = [
     { name: 'Daily Transaction Summary', type: 'FCC', country: 'Kenya', lastRun: '2 min ago', duration: '0.8s' },
@@ -33,6 +37,9 @@ export class Reports {
  
   get filteredReports() {
     let result = this.reports;
+    if (this.currentUserLocation) {
+      result = result.filter(r => r.country === this.currentUserLocation);
+    }
     if (this.activeFilter !== 'All') {
       result = result.filter(r => r.type === this.activeFilter || r.country === this.activeFilter);
     }

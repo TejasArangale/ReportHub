@@ -1,18 +1,37 @@
 <div class="login-page">
   <div class="login-card">
     <div class="login-header">
-      <h1>ReportHub Login</h1>
-      <p>Sign in to access dashboards and reports</p>
+      <div class="login-brand">
+        <img class="login-logo" src="/absa-login.svg" alt="ReportHub login logo" />
+        <div>
+          <h1>ReportHub</h1>
+          <p>Sign in to access dashboards and reports</p>
+        </div>
+      </div>
     </div>
-    <form (submit)="submitLogin(username.value, role.value, location.value); $event.preventDefault()">
-      <label for="username">Username</label>
-      <input id="username" #username type="text" placeholder="Enter your name" />
+    <form (submit)="submitLogin(username.value, password.value, country.value); $event.preventDefault()">
 
-      <label for="role">Role</label>
-      <input id="role" #role type="text" placeholder="Report Admin" />
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" #username type="text" placeholder="Enter your name" />
+      </div>
 
-      <label for="location">Location</label>
-      <input id="location" #location type="text" placeholder="Kenya" />
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" #password type="password" placeholder="Enter your password" />
+      </div>
+
+      <div class="field">
+        <label for="country">Country</label>
+        <div class="select-wrap">
+          <select id="country" #country>
+            <option value="Kenya">Kenya</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="NBC">NBC</option>
+          </select>
+        </div>
+      </div>
 
       <button type="submit">Login</button>
     </form>

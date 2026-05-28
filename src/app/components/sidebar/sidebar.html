@@ -1,6 +1,8 @@
 <div class="sidebar">
   <div class="sb-logo">
-    <div class="sb-logo-icon"><i class="ti ti-chart-bar"></i></div>
+    <div class="sb-logo-icon">
+      <img src="/absa-sidebar.svg" alt="ReportHub sidebar logo" />
+    </div>
     <div>
       <div class="sb-logo-name">ReportHub</div>
       <div class="sb-logo-sub">Bank Reporting Platform</div>
@@ -12,12 +14,18 @@
     <!-- Main nav -->
     <div class="sb-section">Main</div>
 
+    <div class="sb-item"
+      [class.active]="activeScreen === 'dashboard'"
+      (click)="setScreen('dashboard')">
+      <i class="ti ti-layout-dashboard"></i> Dashboard
+    </div>
+
     <!-- All Reports is separate because it needs the badge -->
     <div class="sb-item"
       [class.active]="activeScreen === 'reports' && activeFilter === 'All'"
       (click)="setScreen('reports')">
       <i class="ti ti-file-description"></i> All Reports
-      <span class="sb-badge">{{ totalCount }}</span>
+      <span class="sb-badge">{{ filteredTotalCount }}</span>
     </div>
 
     @for (item of mainNav; track item.screen) {
@@ -31,14 +39,14 @@
     <!-- Countries — derived from reports data -->
     <div class="sb-section" style="margin-top:8px">Countries</div>
 
-    @for (country of countries; track country) {
-      <div class="sb-item"
-        [class.active]="activeScreen === 'reports' && activeFilter === country"
-        (click)="setScreenWithFilter('reports', country)">
-        <i class="ti ti-map-pin"></i> {{ country }}
-        <span class="sb-badge">{{ countByCountry(country) }}</span>
-      </div>
-    }
+   @for (country of visibleCountries; track country.name) {
+  <div class="sb-item"
+    [class.active]="activeScreen === 'reports' && activeFilter === country.name"
+    (click)="setScreenWithFilter('reports', country.name)">
+    <i class="ti ti-map-pin"></i> {{ country.name }}
+    <span class="sb-badge">{{ country.count }}</span>
+  </div>
+}
 
     <!-- Admin nav -->
     <div class="sb-section" style="margin-top:8px">Admin</div>
@@ -58,7 +66,7 @@
       <div class="sb-avatar">{{ userInitials }}</div>
       <div>
         <div class="sb-uname">{{ currentUser.name || 'Guest User' }}</div>
-        <div class="sb-urole">{{ currentUser.role || 'Please login' }} · {{ currentUser.location || 'Unknown' }}</div>
+        <div class="sb-urole">{{ currentUser.location || 'Unknown' }}</div>
       </div>
       @if (currentUser.name) {
         <div class="sb-arrow"><i class="ti ti-chevron-down"></i></div>

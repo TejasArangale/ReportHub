@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -81,9 +81,19 @@ const REPORTS_DB: ReportDefinition[] = [
 export class Runner {
   report: ReportDefinition | null = null;
   fieldValues: Record<string, string> = {};
-  isRunning       = false;
-  showPreview     = true;
-  selectedFormat  = '';
+  isRunning      = false;
+  showPreview    = true;
+  selectedFormat = 'PDF';
+  csvAssetPath = '/assets/Bank_Statement_100_Entries.csv';
+  csvAssetName = 'Bank_Statement_100_Entries.csv';
+  excelAssetPath = '/assets/Bank_Statement_100_Entries.xlsx';
+  excelAssetName = 'Bank_Statement_100_Entries.xlsx';
+  pdfAssetPath = '/assets/Bank_Statement_100_Entries.pdf';
+  pdfAssetName = 'Bank_Statement_100_Entries.pdf';
+
+  // ── Report state: idle → generating → success ──
+  reportState: 'idle' | 'generating' | 'success' = 'idle';
+  reportMessage = '';
 
   previewHeaders = ['Date', 'Branch', 'Account', 'Type', 'Amount (KES)', 'Status'];
 
@@ -102,7 +112,7 @@ export class Runner {
     return `Showing ${this.previewRows.length} of ${this.totalRows.toLocaleString()} rows · Ran in ${this.runTime}`;
   }
 
-  constructor() {
+  constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.loadReport('daily-txn-kenya');
   }
 
@@ -134,12 +144,95 @@ export class Runner {
     this.selectedFormat = format;
   }
 
+  get downloadFileName(): string {
+    if (this.selectedFormat === 'CSV') {
+      return this.csvAssetName;
+    }
+    if (this.selectedFormat === 'PDF') {
+      return this.pdfAssetName;
+    }
+    if (this.selectedFormat === 'Excel') {
+      return this.excelAssetName;
+    }
+    if (!this.report) return `report.${this.selectedFormat.toLowerCase()}`;
+    const extension = this.selectedFormat === 'Excel' ? 'xls' : this.selectedFormat.toLowerCase();
+    return `${this.report.id}-report.${extension}`;
+  }
+
+  // ── Step 1: click Run Report → generating for 3s → success stays until download ──
   runReport(): void {
-    this.isRunning   = true;
-    this.showPreview = false;
+    this.isRunning     = true;
+    this.showPreview   = false;
+    this.reportState   = 'generating';
+    this.reportMessage = 'Report is generating...';
+    this.cdr.detectChanges();
+
     setTimeout(() => {
-      this.isRunning   = false;
-      this.showPreview = true;
-    }, 1500);
+      this.isRunning     = false;
+      this.reportState   = 'success';
+      this.reportMessage = 'Report generated successfully.';
+      this.cdr.detectChanges();
+    }, 3000);
+  }
+
+  // ── Download: triggered by user click, dismisses popup immediately ──
+  downloadReport(): void {
+    if (this.selectedFormat === 'CSV') {
+      this.downloadFromAsset(this.csvAssetPath, this.csvAssetName);
+      this.finishDownload();
+      return;
+    }
+
+    if (this.selectedFormat === 'PDF') {
+      this.downloadFromAsset(this.pdfAssetPath, this.pdfAssetName);
+      this.finishDownload();
+      return;
+    }
+
+    if (this.selectedFormat === 'Excel') {
+      this.downloadFromAsset(this.excelAssetPath, this.excelAssetName);
+      this.finishDownload();
+      return;
+    }
+
+    // Fallback: if format is unexpected, dismiss and restore preview
+    this.finishDownload();
+  }
+
+  private finishDownload(): void {
+    this.reportState = 'idle';
+    this.showPreview = true;
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  }
+
+  private downloadFromAsset(assetPath: string, fileName: string): void {
+    const link = document.createElement('a');
+    link.href = assetPath;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  private generateExcelContent(): string {
+    return `Date\tTransaction ID\tDescription\tDebit Amount\tCredit Amount\tBalance\tTransaction Type\n` +
+      `02-01-2026\tTXN1001\tSalary Credit\t\t5925\t55925\tCredit\n` +
+      `03-01-2026\tTXN1002\tCash Deposit\t4844\t\t51081\tDebit\n` +
+      `04-01-2026\tTXN1003\tElectricity Bill\t1359\t\t49722\tDebit\n` +
+      `05-01-2026\tTXN1004\tOnline Purchase\t1185\t\t48537\tDebit\n` +
+      `06-01-2026\tTXN1005\tOnline Purchase\t342\t\t48195\tDebit\n`;
+  }
+
+  private generatePdfContent(): string {
+    return 'Report generated successfully for ' + this.report?.name + '.\n\nThank you for using ReportHub.';
   }
 }
