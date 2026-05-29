@@ -98,11 +98,11 @@ export class Runner {
   previewHeaders = ['Date', 'Branch', 'Account', 'Type', 'Amount (KES)', 'Status'];
 
   previewRows = [
-    ['01 May 2025', 'Nairobi HQ', '0012-34567', 'Credit',   '142,500', 'Settled'],
-    ['01 May 2025', 'Mombasa',    '0098-11234', 'Debit',    '58,200',  'Settled'],
-    ['02 May 2025', 'Kisumu',     '0045-78901', 'Transfer', '320,000', 'Settled'],
-    ['02 May 2025', 'Nairobi HQ', '0023-45678', 'Credit',   '89,750',  'Pending'],
-    ['03 May 2025', 'Mombasa',    '0067-23456', 'Debit',    '15,600',  'Settled'],
+    ['01 May 2025', 'Nairobi HQ', '0012-34567', 'Credit',   '142,500', 'Completed'],
+    ['01 May 2025', 'Mombasa',    '0098-11234', 'Debit',    '58,200',  'Completed'],
+    ['02 May 2025', 'Kisumu',     '0045-78901', 'Transfer', '320,000', 'Completed'],
+    ['02 May 2025', 'Nairobi HQ', '0023-45678', 'Credit',   '89,750',  'Pending'  ],
+    ['03 May 2025', 'Mombasa',    '0067-23456', 'Debit',    '15,600',  'Completed'],
   ];
 
   totalRows = 4821;

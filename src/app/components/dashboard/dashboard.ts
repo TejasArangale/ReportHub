@@ -34,6 +34,7 @@ export interface ActivityItem {
 })
 export class Dashboard {
   @Input() reports: any[] = [];
+  @Input() currentUserLocation: string = '';
   @Output() screenChange = new EventEmitter<string>();
 
   // ── Stat cards ──────────────────────────────────
@@ -59,6 +60,15 @@ export class Dashboard {
     { dotClass: 'dot-amber', boldPart: 'Customer Risk Score',         text: 'ran — 4,821 rows returned in 1.4s',        time: '1h ago'  },
     { dotClass: 'dot-green', boldPart: 'AML Suspicious Activity',     text: 'exported as Excel by T. Banda',            time: '2h ago'  },
   ];
+
+  get recentReportsToShow(): RecentReport[] {
+    if (!this.currentUserLocation) {
+      return this.recentReports;
+    }
+    return this.recentReports.map(report => ({...report,
+      country: this.currentUserLocation
+    }));
+  }
 
   setScreen(screen: string) {
     this.screenChange.emit(screen);

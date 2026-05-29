@@ -18,7 +18,7 @@
 </div>
 
 <div class="report-grid">
-  @for (r of recentReports; track r.name) {
+  @for (r of recentReportsToShow; track r.name) {
     <div class="report-card" (click)="setScreen('runner')">
       <div class="rc-top">
         <span class="rc-name">{{ r.name }}</span>
