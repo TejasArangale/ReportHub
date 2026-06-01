@@ -11,6 +11,7 @@ import { ScheduleModalComponent } from '../schedule-modal/schedule-modal';
 })
 export class Schedule {
   @Input() searchTerm: string = '';
+  @Input() currentUserLocation: string = '';
 
   showModal = false;
 
@@ -26,9 +27,20 @@ export class Schedule {
   }
 
   get filteredSchedules() {
-    if (!this.searchTerm) return this.schedules;
+    let result = this.schedules;
+    
+    // Replace country name with login country in all schedules
+    if (this.currentUserLocation) {
+      result = result.map(s => ({
+        ...s,
+        name: s.name.replace(/—\s*\w+$/, `— ${this.currentUserLocation}`)
+      }));
+    }
+    
+    // Filter by search term
+    if (!this.searchTerm) return result;
     const term = this.searchTerm.toLowerCase();
-    return this.schedules.filter(s => s.name.toLowerCase().includes(term));
+    return result.filter(s => s.name.toLowerCase().includes(term));
   }
 
   toggleSchedule(schedule: any) {

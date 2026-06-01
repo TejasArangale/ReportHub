@@ -18,7 +18,7 @@
       <app-dashboard *ngIf="activeScreen === 'dashboard'" [currentUserLocation]="currentUser.location" (screenChange)="onScreenChange($event)"></app-dashboard>
       <app-reports *ngIf="activeScreen === 'reports'" [externalFilter]="activeFilter" [currentUserLocation]="currentUser.location" [searchTerm]="searchTerm" (screenChange)="onScreenChange($event)" (filterChange)="onFilterChange($event)"></app-reports>
       <app-runner *ngIf="activeScreen === 'runner'"></app-runner>
-      <app-schedule *ngIf="activeScreen === 'schedule'" [searchTerm]="searchTerm"></app-schedule>
+      <app-schedule *ngIf="activeScreen === 'schedule'" [searchTerm]="searchTerm" [currentUserLocation]="currentUser.location"></app-schedule>
       <app-user-management *ngIf="activeScreen === 'user-management'"></app-user-management>
       <app-settings *ngIf="activeScreen === 'settings'"></app-settings>
     </div>

@@ -1,3 +1,6 @@
+
+
+
 import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -7,7 +10,10 @@ import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/cor
   styleUrl: './login.css',
    encapsulation: ViewEncapsulation.None 
 })
+
+
 export class Login {
+  
   @Output() login = new EventEmitter<{ name: string; role: string; location: string }>();
 
   submitLogin(name: string, password: string, country: string) {
