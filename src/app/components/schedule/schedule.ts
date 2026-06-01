@@ -16,10 +16,10 @@ export class Schedule {
   showModal = false;
 
   schedules = [
-    { icon: 'ti-refresh',        name: 'Daily Transaction Summary — Kenya',       meta: 'Every day at 06:00 · Email to 4 recipients · PDF',     active: true  },
-    { icon: 'ti-calendar',       name: 'Weekly FCR Digest — Uganda',              meta: 'Every Monday at 07:30 · Email to 2 recipients · Excel', active: true  },
-    { icon: 'ti-calendar-month', name: 'Monthly Compliance Summary — Mozambique', meta: '1st of month at 08:00 · Network path · PDF',            active: true  },
-    { icon: 'ti-refresh',        name: 'AML Screening Report — NBC',              meta: 'Every day at 05:00 · Email to 6 recipients · Excel',    active: false },
+    { icon: 'ti-refresh',        baseName: 'Daily Transaction Summary',       meta: 'Every day at 06:00 · Email to 4 recipients · PDF',     active: true  },
+    { icon: 'ti-calendar',       baseName: 'Weekly FCR Digest',              meta: 'Every Monday at 07:30 · Email to 2 recipients · Excel', active: true  },
+    { icon: 'ti-calendar-month', baseName: 'Monthly Compliance Summary', meta: '1st of month at 08:00 · Network path · PDF',            active: true  },
+    { icon: 'ti-refresh',        baseName: 'AML Screening Report',              meta: 'Every day at 05:00 · Email to 6 recipients · Excel',    active: false },
   ];
 
   get activeCount(): number {
@@ -27,15 +27,10 @@ export class Schedule {
   }
 
   get filteredSchedules() {
-    let result = this.schedules;
-    
-    // Replace country name with login country in all schedules
-    if (this.currentUserLocation) {
-      result = result.map(s => ({
-        ...s,
-        name: s.name.replace(/—\s*\w+$/, `— ${this.currentUserLocation}`)
-      }));
-    }
+    let result = this.schedules.map(s => ({
+      ...s,
+      name: this.currentUserLocation ? `${s.baseName} — ${this.currentUserLocation}` : s.baseName
+    }));
     
     // Filter by search term
     if (!this.searchTerm) return result;
@@ -44,7 +39,11 @@ export class Schedule {
   }
 
   toggleSchedule(schedule: any) {
-    schedule.active = !schedule.active;
+    // Find the original schedule in this.schedules by baseName
+    const original = this.schedules.find(s => s.baseName === schedule.baseName);
+    if (original) {
+      original.active = !original.active;
+    }
   }
 
   openModal() {
